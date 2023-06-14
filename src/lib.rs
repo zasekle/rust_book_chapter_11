@@ -2,6 +2,17 @@ pub fn add(left: usize, right: usize) -> usize {
     left + right
 }
 
+pub fn subtract(left: isize, right: isize) -> isize {
+    subtract_helper(left, right)
+}
+
+//This function is private to this module. However, Rust still allows it to be tested.
+fn subtract_helper(left: isize, right: isize) -> isize {
+    left - right
+}
+
+//The cfg here stands for `configuration` and should only be included when the command cargo test
+// is used, not commands such as cargo build.
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -22,6 +33,7 @@ mod tests {
 
     #[test]
     fn inbuilt_assert() {
+        println!("Printing stuff");
         assert!(true);
         assert!(
             true,
@@ -34,7 +46,7 @@ mod tests {
     // sure that the correct reason was returned. Note that the entire string does not need to be
     // entered, only a portion of it is just fine.
     #[test]
-    #[should_panic (expected = "Failing on purpose")]
+    #[should_panic(expected = "Failing on purpose")]
     fn expected_panic() {
         panic!("Failing on purpose is bad :(");
     }
@@ -48,5 +60,20 @@ mod tests {
         } else {
             Err(String::from("2 + 2 should equal 4"))
         }
+    }
+
+    //Can ignore tests with the [ignore] annotation. Ignored tests can be run with the command
+    // $ cargo test -- --ignored
+    // All tests can be run with the command
+    // $ cargo test -- --include-ignored
+    #[test]
+    #[ignore]
+    fn ignored_test() {
+        println!("Just printing");
+    }
+
+    #[test]
+    fn internal_test() {
+        assert_eq!(subtract_helper(3, 2), 1);
     }
 }
